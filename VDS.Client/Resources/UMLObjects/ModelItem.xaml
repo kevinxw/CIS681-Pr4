@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="clr-namespace:CIS681.Fall2012.VDS.UI.Objects"
+                    xmlns:c="clr-namespace:CIS681.Fall2012.VDS.UI.Converters">
+
+    <!--<c:StyleConverter x:Key="StyleConverter" />-->
+    <!-- Change style by path -->
+    <!--<Style TargetType="ui:ModelItem" x:Key="BaseModelItemStyle">
+                <ui:ModelItem.Style>
+                    <MultiBinding Converter="{StaticResource StyleConverter}">
+                        <MultiBinding.Bindings>
+                            <Binding RelativeSource="{RelativeSource Self}"/>
+                            <Binding Path="Type"/>
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </ui:ModelItem.Style>
+    </Style>
+
+    <Style TargetType="ui:ModelItem" BasedOn="{StaticResource BaseModelItemStyle}"/>-->
+</ResourceDictionary>

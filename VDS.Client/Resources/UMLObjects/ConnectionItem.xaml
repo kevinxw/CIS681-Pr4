@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="clr-namespace:CIS681.Fall2012.VDS.UI.Objects"
+                    xmlns:c="clr-namespace:CIS681.Fall2012.VDS.UI.Converters">
+
+    <c:OrthogonalPathConverter x:Key="OrthogonalPathConverter" />
+    <Style TargetType="ui:ConnectionItem" x:Key="BaseOrthogonalPath">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ui:ConnectionItem">
+                    <Path Data="{Binding Path=Points, Converter={StaticResource ResourceKey=OrthogonalPathConverter}, Mode=OneWay}" Stroke="Black"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

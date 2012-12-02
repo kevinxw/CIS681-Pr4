@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="clr-namespace:CIS681.Fall2012.VDS.UI.Objects"
+                    xmlns:com="clr-namespace:CIS681.Fall2012.VDS.UI.Components"
+                    xmlns:c="clr-namespace:CIS681.Fall2012.VDS.UI.Converters">
+
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="BasicDiagram.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+    <!-- Model Pickup box on the right -->
+    <com:PickupItemsControl x:Key="Model_PickupBox" ItemSize="60,50" SnapsToDevicePixels="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Focusable="False" >
+        <ItemsControl.Items>
+            <ui:ModelItem Type="Generic" Style="{StaticResource Generic}" />
+            <!-- Show packages -->
+            <ui:ModelItem Type="Package" Style="{StaticResource Package}" />
+            <!-- Show class -->
+            <ui:ModelItem Type="Class" Style="{StaticResource Class}" />
+        </ItemsControl.Items>
+    </com:PickupItemsControl>
+    
+    <!-- Connection Pickup box -->
+    <!--<com:PickupItemsControl x:Key="Connection_PickupBox" ItemSize="60,50" SnapsToDevicePixels="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Focusable="False" >
+        <ItemsControl.Items>
+        </ItemsControl.Items>
+    </com:PickupItemsControl>-->
+    
+</ResourceDictionary>

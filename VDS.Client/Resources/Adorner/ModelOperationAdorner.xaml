@@ -1,0 +1,79 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../MetroStyles/Core.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="BaseThumbStyle" TargetType="{x:Type Thumb}">
+        <Setter Property="Width" Value="8"/>
+        <Setter Property="Height" Value="8"/>
+        <Setter Property="SnapsToDevicePixels" Value="true"/>
+    </Style>
+
+    <Style x:Key="ResizeThumbStyle" TargetType="{x:Type Thumb}" BasedOn="{StaticResource BaseThumbStyle}">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Ellipse Stroke="Gray" StrokeThickness="2" Fill="{StaticResource GoogleGreenBrush}" Opacity="0.8" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Detailed styles -->
+    <Style x:Key="ResizeThumbStyle_LT" TargetType="{x:Type Thumb}" BasedOn="{StaticResource ResizeThumbStyle}">
+        <Setter Property="Cursor" Value="SizeNWSE"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+    <Style x:Key="ResizeThumbStyle_RT" TargetType="{x:Type Thumb}" BasedOn="{StaticResource ResizeThumbStyle}">
+        <Setter Property="Cursor" Value="SizeNESW"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+    <Style x:Key="ResizeThumbStyle_LB" TargetType="{x:Type Thumb}" BasedOn="{StaticResource ResizeThumbStyle}">
+        <Setter Property="Cursor" Value="SizeNESW"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+    </Style>
+    <Style x:Key="ResizeThumbStyle_RB" TargetType="{x:Type Thumb}" BasedOn="{StaticResource ResizeThumbStyle}">
+        <Setter Property="Cursor" Value="SizeNWSE"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+    </Style>
+
+    <!-- Handler style -->
+    <Style x:Key="BaseHandlerThumbStyle" TargetType="{x:Type Thumb}">
+        <Setter Property="Width" Value="15"/>
+        <Setter Property="Height" Value="15"/>
+        <Setter Property="SnapsToDevicePixels" Value="true"/>
+    </Style>
+    <!-- Move thumb -->
+    <Style x:Key="MoveThumbStyle" TargetType="{x:Type Thumb}" BasedOn="{StaticResource BaseHandlerThumbStyle}">
+        <Setter Property="Cursor" Value="SizeAll"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Ellipse Stroke="Black" StrokeThickness="2" Opacity="0.8">
+                        <Ellipse.Fill>
+                            <DrawingBrush>
+                                <DrawingBrush.Drawing>
+                                    <GeometryDrawing Brush="Transparent">
+                                        <GeometryDrawing.Pen>
+                                            <Pen Thickness="1" Brush="Black"/>
+                                        </GeometryDrawing.Pen>
+                                        <GeometryDrawing.Geometry>
+                                            <Geometry>M0,0 L10,10 M0,10 L10,0</Geometry>
+                                        </GeometryDrawing.Geometry>
+                                    </GeometryDrawing>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
