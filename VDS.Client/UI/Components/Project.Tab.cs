@@ -6,9 +6,13 @@
 
 using System.ComponentModel;
 using System.Windows.Controls;
+using System.Collections.Generic;
 
-namespace CIS681.Fall2012.VDS.Data {
+namespace CIS681.Fall2012.VDS.Data.Client {
     public partial class Project {
+        /// <summary>
+        /// The current project opened
+        /// </summary>
         public static Project CurrentProject { get; set; }
 
         /// <summary>
@@ -20,7 +24,8 @@ namespace CIS681.Fall2012.VDS.Data {
         /// "real" diagram collection
         /// </summary>
         private DiagramCollection diagrams = null;
-        public DiagramCollection Children { get { return diagrams; } }
+
+        private List<Diagram> children;
 
         partial void InitTab() {
         }
@@ -30,8 +35,8 @@ namespace CIS681.Fall2012.VDS.Data {
             diagrams.ActivateNewDiagram = true;
             // rebuild tabs by children
             diagrams.Sync();
-            if (activatedDiagram != null)
-                Tabs.SelectedItem = activatedDiagram.Tab;
+            if (ActivatedDiagram != null)
+                Tabs.SelectedItem = ActivatedDiagram.Tab;
             PropertyChanged += OnTitleChanged;
             PropertyChanged += OnActivatedDiagramChanged;
 #if DEBUG_ON

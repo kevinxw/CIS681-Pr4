@@ -80,15 +80,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\BaseData.cs" />
-    <Compile Include="Data\Client\Connection.Loader.cs" />
-    <Compile Include="Data\Client\Diagram.Loader.cs" />
-    <Compile Include="Data\Client\Model.Loader.cs" />
-    <Compile Include="Data\Diagram.cs" />
-    <Compile Include="Data\Objects\BaseObject.cs" />
-    <Compile Include="Data\Objects\ConnectorType.cs" />
-    <Compile Include="Data\Objects\ConnectionType.cs" />
-    <Compile Include="Data\Project.cs" />
+    <Compile Include="Data\Client\Objects\Connection.cs" />
+    <Compile Include="Data\Client\Objects\Connector.cs" />
+    <Compile Include="Data\Client\Diagram.cs" />
+    <Compile Include="Data\Client\Objects\Model.cs" />
+    <Compile Include="Data\Persistence\FileManager.cs" />
     <Compile Include="UI\Adorner\ConnectorAdorner.cs" />
     <Compile Include="UI\Adorner\AdornerDataThumb.cs" />
     <Compile Include="UI\Adorner\ModelOperationAdorner.cs" />
@@ -113,7 +109,7 @@
     <Compile Include="UI\IDrawable.cs" />
     <Compile Include="UI\ISelectable.cs" />
     <Compile Include="UI\Objects\ModelItem.cs" />
-    <Compile Include="Data\Client\Project.Loader.cs" />
+    <Compile Include="Data\Client\Project.cs" />
     <Compile Include="UI\Promot\QueationDialog.xaml.cs">
       <DependentUpon>QueationDialog.xaml</DependentUpon>
     </Compile>
@@ -130,11 +126,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Persistence\DataSerializer.cs" />
-    <Compile Include="Data\Persistence\FileManager.cs" />
-    <Compile Include="Data\Objects\Connection.cs" />
-    <Compile Include="Data\Objects\Connector.cs" />
-    <Compile Include="Data\Objects\Model.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -306,6 +297,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Entypo-license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VDS.SharedComponents\VDS.SharedComponents.csproj">
+      <Project>{F17BD155-4B14-4FA2-AFC0-B3AB16D52A56}</Project>
+      <Name>VDS.SharedComponents</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

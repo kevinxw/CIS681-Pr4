@@ -10,7 +10,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
-using CIS681.Fall2012.VDS.UI;
 
 namespace CIS681.Fall2012.VDS.Data {
     public sealed class DataSerializer<T> {
@@ -77,7 +76,7 @@ namespace CIS681.Fall2012.VDS.Data {
                 }
             }
             catch (Exception e) {
-                new ErrorHandler("Data corrupted.\nPlease ensure the format is valid.", e).Show();
+                //new ErrorHandler("Data corrupted.\nPlease ensure the format is valid.", e).Show();
             }
             return instance;
         }

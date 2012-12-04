@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using CIS681.Fall2012.VDS.Data.Objects;
+using CIS681.Fall2012.VDS.Data.Client;
 using CIS681.Fall2012.VDS.UI;
 using CIS681.Fall2012.VDS.UI.Adorner;
 using CIS681.Fall2012.VDS.UI.Objects;
@@ -209,7 +209,7 @@ namespace CIS681.Fall2012.VDS.UI.Objects {
 /*
  * An extension to model
  */
-namespace CIS681.Fall2012.VDS.Data.Objects {
+namespace CIS681.Fall2012.VDS.Data.Client {
     public partial class Model : IControl<ModelItem> {
         public ModelItem Control { get; set; }
 

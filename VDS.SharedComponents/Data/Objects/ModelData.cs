@@ -10,17 +10,17 @@
 using System.Runtime.Serialization;
 using System.Windows;
 
-namespace CIS681.Fall2012.VDS.Data.Objects {
+namespace CIS681.Fall2012.VDS.Data {
     [DataContract(Name = "Model", IsReference = true)]
-    public partial class Model : BaseObject {
+    public class ModelData : BaseObject {
 
         #region Properties
         /// <summary>
         /// One Model has five connectors at most
         /// </summary>
         [DataMember(Name = "Connectors")]
-        public Connector[] Connectors { get; private set; }
-        public Connector GetConnector(ConnectorType type) {
+        public ConnectorData[] Connectors { get; private set; }
+        public ConnectorData GetConnector(ConnectorType type) {
             return Connectors[(int)type];
         }
 
@@ -28,7 +28,7 @@ namespace CIS681.Fall2012.VDS.Data.Objects {
         /// Model Size
         /// </summary>
         [DataMember(Name = "Size", EmitDefaultValue = false)]
-        private Size size = Size.Empty;
+        protected Size size = Size.Empty;
         public Size Size {
             get { return size; }
             set {
@@ -37,24 +37,28 @@ namespace CIS681.Fall2012.VDS.Data.Objects {
                 OnPropertyChanged("Size");
             }
         }
-        #endregion
 
-        public Model() { }
+        /// <summary>
+        /// Which diagram owns this model
+        /// </summary>
+        [DataMember(Name = "Owner")]
+        public DiagramData Owner { get; set; }
+        #endregion
 
         /// <summary>
         /// Initialize data like connectors
         /// </summary>
-        protected override void RefreshBaseData() {
-            base.RefreshBaseData();
+        protected override void AfterInitializingData() {
+            base.AfterInitializingData();
             // notice, the order of these connector types cannot be changed
             // this is corresponded with the order of ConnectoryType
             if (Connectors == null)
-                Connectors = new Connector[] {
-                new Connector(this,ConnectorType.Top),
-                new Connector(this,ConnectorType.Left),
-                new Connector(this,ConnectorType.Center),
-                new Connector(this,ConnectorType.Right),
-                new Connector(this,ConnectorType.Bottom)
+                Connectors = new ConnectorData[] {
+                new ConnectorData(this,ConnectorType.Top),
+                new ConnectorData(this,ConnectorType.Left),
+                new ConnectorData(this,ConnectorType.Center),
+                new ConnectorData(this,ConnectorType.Right),
+                new ConnectorData(this,ConnectorType.Bottom)
             };
         }
     }

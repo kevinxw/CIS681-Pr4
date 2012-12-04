@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace CIS681.Fall2012.VDS.Data {
+namespace CIS681.Fall2012.VDS.Data.Client {
     public class DiagramCollection : IList<Diagram> {
         private List<Diagram> list;
         private TabControl tabs;

@@ -12,7 +12,7 @@ using CIS681.Fall2012.VDS.UI;
 using CIS681.Fall2012.VDS.UI.Objects;
 using CIS681.Fall2012.VDS.UI.Operation;
 
-namespace CIS681.Fall2012.VDS.Data {
+namespace CIS681.Fall2012.VDS.Data.Client {
     public partial class Diagram : IControl<Canvas> {
         /// <summary>
         /// Selected Items on current ContainerCanvas
@@ -32,7 +32,7 @@ namespace CIS681.Fall2012.VDS.Data {
         partial void RefreshCanvas() {
             Control = new Canvas();
             // must initialize it here!! deserialization will create an new collection anyway!
-            Children = new UMLObjectCollection(models, connections, Control);
+            Children = new UMLObjectCollection(Models, Connections, Control);
             Children.Sync();
             Control.Focusable = false;  // cannot be focused by default
             Control.MouseMove += OnMouseMove_ShowPos;
@@ -45,8 +45,8 @@ namespace CIS681.Fall2012.VDS.Data {
                 Control.Height = Size.Height;
             }
             // fix canvas start position
-            if (double.IsNaN(StartPosition.X)) startPosition.X = 0;
-            if (double.IsNaN(StartPosition.Y)) startPosition.Y = 0;
+            if (double.IsNaN(StartPosition.X)) StartPosition.X = 0;
+            if (double.IsNaN(StartPosition.Y)) StartPosition.Y = 0;
 #if DEBUG_ON
             // test value
             System.Console.WriteLine("{0} Canvas refreshed!! ", System.DateTime.Now.Millisecond);

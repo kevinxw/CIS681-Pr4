@@ -8,9 +8,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using CIS681.Fall2012.VDS.Data;
-using CIS681.Fall2012.VDS.Data.Objects;
+using CIS681.Fall2012.VDS.Data.Client;
 using CIS681.Fall2012.VDS.UI.Objects;
+using CIS681.Fall2012.VDS.Data;
 
 namespace CIS681.Fall2012.VDS.UI.Adorner {
     public class ConnectorAdorner : System.Windows.Documents.Adorner {

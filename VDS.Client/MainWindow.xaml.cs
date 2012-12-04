@@ -7,10 +7,11 @@
 using System;
 using System.IO;
 using System.Windows.Input;
-using CIS681.Fall2012.VDS.Data;
+using CIS681.Fall2012.VDS.Data.Client;
 using CIS681.Fall2012.VDS.Data.IO;
 using CIS681.Fall2012.VDS.UI.Promot;
 using System.Windows.Media;
+using CIS681.Fall2012.VDS.Data;
 
 namespace CIS681.Fall2012.VDS.UI {
     /// <summary>

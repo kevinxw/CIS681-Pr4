@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace VDS.Server {
-    class Program {
-        static void Main(string[] args) {
-        }
+namespace CIS681.Fall2012.VDS.Task {
+    class TaskManager {
     }
 }

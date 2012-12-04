@@ -10,11 +10,10 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Windows;
-using CIS681.Fall2012.VDS.Data.Objects;
 
 namespace CIS681.Fall2012.VDS.Data {
     [DataContract(Name = "Diagram", IsReference = true)]
-    public partial class Diagram : BaseData {
+    public class DiagramData : BaseData {
 
         #region Properties
         /// <summary>
@@ -25,6 +24,7 @@ namespace CIS681.Fall2012.VDS.Data {
         public bool IsOpen {
             get { return isOpen; }
             set {
+                if (isOpen == value) return;
                 isOpen = value;
                 OnPropertyChanged("IsOpen");
             }
@@ -34,14 +34,12 @@ namespace CIS681.Fall2012.VDS.Data {
         /// Child objects
         /// </summary>
         [DataMember(Name = "Models", EmitDefaultValue = false, Order = 0)]
-        private List<Model> models;
-        public List<Model> Models { get { return models; } }
+        public List<ModelData> Models { get; private  set; }
         [DataMember(Name = "Connections", EmitDefaultValue = false, Order = 1)]
-        private List<Connection> connections;
-        public List<Connection> Connections { get { return connections; } }
+        public List<ConnectionData> Connections { get; private  set; }
 
         /// <summary>
-        /// Canvas size
+        /// Canvas size, should has value before serializing
         /// </summary>
         [DataMember(Name = "Size", EmitDefaultValue = false)]
         private Size size = Size.Empty;
@@ -58,7 +56,7 @@ namespace CIS681.Fall2012.VDS.Data {
         /// Start Position, when canvas is expanded, what is the coordinate of Canvas.LeftTop?
         /// </summary>
         [DataMember(Name = "StartPosition")]
-        private Point startPosition = new Point(0,0);
+        private Point startPosition = new Point(0, 0);
         public Point StartPosition {
             get { return startPosition; }
             set {
@@ -67,15 +65,21 @@ namespace CIS681.Fall2012.VDS.Data {
                 OnPropertyChanged("StartPosition");
             }
         }
+
+        /// <summary>
+        /// Which project is this diagram belonged to
+        /// </summary>
+        [DataMember(Name = "Owner")]
+        public ProjectData Owner { get; set; }
         #endregion
 
-        protected override void RefreshBaseData() {
-            if (models == null)
-                models = new List<Model>();
-            if (connections == null)
-                connections = new List<Connection>();
-            // after models and connections are loaded, we need to bind events which synchronizing them
-            connections.ForEach(item => item.InitEventHandler());
+        /// <summary>
+        /// Initialize data
+        /// </summary>
+        protected override void AfterInitializingData() {
+            base.AfterInitializingData();
+            if (Models == null) Models = new List<ModelData>();
+            if (Connections == null) Connections = new List<ConnectionData>();
         }
     }
 }

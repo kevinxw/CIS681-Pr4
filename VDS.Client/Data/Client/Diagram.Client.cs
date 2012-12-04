@@ -5,17 +5,26 @@
 //////
 /// Nothing to be TESTED here!
 //////
-namespace CIS681.Fall2012.VDS.Data {
-    public partial class Diagram {
-        protected override void InitData() {
+
+using System.Windows;
+using System.Collections.Generic;
+namespace CIS681.Fall2012.VDS.Data.Client {
+    public partial class Diagram : CIS681.Fall2012.VDS.Data.DiagramData {
+
+        public List<Model> Models { get; private set; }
+
+        protected override void BeforeInitializingData() {
+            base.BeforeInitializingData();
             // init canvas first! as tab.contect = canvas!
             InitCanvas();
             InitTab();
         }
-        protected override void RefreshData() {
+        protected override void AfterInitializingData() {
+            base.AfterInitializingData();
             RefreshCanvas();
             RefreshTab();
         }
+
         // canvas part
         partial void InitCanvas();
         partial void RefreshCanvas();

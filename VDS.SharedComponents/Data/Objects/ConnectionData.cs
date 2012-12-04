@@ -12,17 +12,17 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Windows;
 
-namespace CIS681.Fall2012.VDS.Data.Objects {
+namespace CIS681.Fall2012.VDS.Data {
     [DataContract(Name = "Connection", IsReference = true)]
-    public partial class Connection : BaseObject {
+    public class ConnectionData : BaseObject {
 
         #region Properties
         /// <summary>
         /// Source Connector
         /// </summary>
         [DataMember(Name = "Source", EmitDefaultValue = false)]
-        private Connector source = null;
-        public Connector Source {
+        protected ConnectorData source = null;
+        public ConnectorData Source {
             get { return source; }
             set {
                 if (source != null) {   // bind events
@@ -46,12 +46,9 @@ namespace CIS681.Fall2012.VDS.Data.Objects {
         /// Record the position of source, in case source connector is deleted
         /// </summary>
         [DataMember(Name = "SourcePosition", EmitDefaultValue = false)]
-        private Point sourcePosition = new Point(double.NaN, double.NaN);
+        protected Point sourcePosition = new Point(double.NaN, double.NaN);
         public Point SourcePosition {
-            get {
-                if (Source != null) return Source.Position;
-                return sourcePosition;
-            }
+            get { if (Source != null) return Source.Position; else return sourcePosition; }
             set { sourcePosition = value; }
         }
 
@@ -59,19 +56,19 @@ namespace CIS681.Fall2012.VDS.Data.Objects {
         /// Sink Connector
         /// </summary>
         [DataMember(Name = "Sink", EmitDefaultValue = false)]
-        private Connector sink = null;
-        public Connector Sink {
+        protected ConnectorData sink = null;
+        public ConnectorData Sink {
             get { return sink; }
             set {
-                if (sink != null) { // bind events
-                    sink.Owner.PropertyChanged -= OnSinkPositionChanged;
-                    sink.Owner.PropertyChanged -= OnSinkSizeChanged;
+                if (sink != null) {   // bind events
+                    sink.Owner.PropertyChanged -= OnSourcePositionChanged;
+                    sink.Owner.PropertyChanged -= OnSourceSizeChanged;
                     sink.Connections.Remove(this);
                 }
                 if ((sink = value) != null) {
                     sink.Connections.Add(this);
-                    sink.Owner.PropertyChanged += OnSinkPositionChanged;
-                    sink.Owner.PropertyChanged += OnSinkSizeChanged;
+                    sink.Owner.PropertyChanged += OnSourcePositionChanged;
+                    sink.Owner.PropertyChanged += OnSourceSizeChanged;
                     sinkPosition = sink.Position;
                 }
                 OnPropertyChanged("Sink");
@@ -82,12 +79,9 @@ namespace CIS681.Fall2012.VDS.Data.Objects {
         /// Record the position of sink, in case source connector is deleted
         /// </summary>
         [DataMember(Name = "SinkPosition", EmitDefaultValue = false)]
-        private Point sinkPosition = new Point(double.NaN, double.NaN);
+        protected Point sinkPosition = new Point(double.NaN, double.NaN);
         public Point SinkPosition {
-            get {
-                if (Sink != null) return Sink.Position;
-                return sinkPosition;
-            }
+            get { if (Sink != null) return Sink.Position; else return sinkPosition; }
             set { sinkPosition = value; }
         }
 
@@ -95,8 +89,13 @@ namespace CIS681.Fall2012.VDS.Data.Objects {
         /// For orthogonal style connections, the position of stops of current connection
         /// </summary>
         [DataMember(Name = "Stops")]
-        private List<Point> stops = new List<Point>();
-        public List<Point> Stops { get { return stops; } }
+        protected List<Point> Stops { get; private set; }
+
+        /// <summary>
+        /// Which diagram does this connection belongs to
+        /// </summary>
+        [DataMember(Name = "Owner")]
+        public DiagramData Owner { get; set; }
         #endregion
 
         #region Event Handlers
@@ -128,6 +127,13 @@ namespace CIS681.Fall2012.VDS.Data.Objects {
         }
         #endregion
 
+        protected override void AfterInitializingData() {
+            base.AfterInitializingData();
+            if (Stops == null)
+                Stops = new List<Point>();
+            InitEventHandler();
+        }
+
         /// <summary>
         /// Bind event handlers, etc.
         /// </summary>
@@ -141,5 +147,6 @@ namespace CIS681.Fall2012.VDS.Data.Objects {
                 sink.Owner.PropertyChanged += OnSinkSizeChanged;
             }
         }
+
     }
 }

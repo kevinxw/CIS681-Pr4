@@ -8,7 +8,7 @@
 
 using System.Collections.Generic;
 using System.Windows;
-using CIS681.Fall2012.VDS.Data.Objects;
+using CIS681.Fall2012.VDS.Data.Client;
 using CIS681.Fall2012.VDS.Data;
 
 namespace CIS681.Fall2012.VDS.UI.PathFinder {

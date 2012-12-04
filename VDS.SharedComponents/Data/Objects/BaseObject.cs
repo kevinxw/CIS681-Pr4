@@ -10,7 +10,7 @@
 using System.Runtime.Serialization;
 using System.Windows;
 
-namespace CIS681.Fall2012.VDS.Data.Objects {
+namespace CIS681.Fall2012.VDS.Data {
     [DataContract(Name = "Object", IsReference = true)]
     public abstract class BaseObject : BaseData {
         #region Properties
@@ -18,7 +18,7 @@ namespace CIS681.Fall2012.VDS.Data.Objects {
         /// Model Type
         /// </summary>
         [DataMember(Name = "Type", EmitDefaultValue = false)]
-        private string type = null;
+        protected string type = null;
         public string Type {
             get { return type; }
             set {
@@ -32,7 +32,7 @@ namespace CIS681.Fall2012.VDS.Data.Objects {
         /// Position of Object
         /// </summary>
         [DataMember(Name = "Position", EmitDefaultValue = false)]
-        private Point position = new Point(double.NaN, double.NaN);
+        protected Point position = new Point(double.NaN, double.NaN);
         public Point Position {
             get { return position; }
             set {

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("VDS.Server")]
+[assembly: AssemblyTitle("Virtual Display System Server")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("bb236499-32a1-49e7-af09-5bf4b461f010")]
+[assembly: Guid("3c674cf1-6226-47c4-8e18-9398be35b1a3")]
 
 // Version information for an assembly consists of the following four values:
 //

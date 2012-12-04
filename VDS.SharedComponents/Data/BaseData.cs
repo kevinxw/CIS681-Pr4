@@ -10,7 +10,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using CIS681.Fall2012.VDS.Data.Objects;
 
 namespace CIS681.Fall2012.VDS.Data {
     [DataContract(Name = "Data", IsReference = true)]
@@ -23,7 +22,7 @@ namespace CIS681.Fall2012.VDS.Data {
         public Guid ID { get; private set; }
 
         /// <summary>
-        /// time of last modification
+        /// Time of last modification
         /// </summary>
         [DataMember(Name = "LastModifyTime", EmitDefaultValue = false)]
         private DateTime lastModifyTime = DateTime.Now.ToUniversalTime();
@@ -38,13 +37,10 @@ namespace CIS681.Fall2012.VDS.Data {
         [DataMember(Name = "Title", EmitDefaultValue = false)]
         private string title = null;
         public string Title {
-            get { return string.IsNullOrWhiteSpace(title) ? "(Untitled)" : title; }
+            get { return title; }
             set {
                 if (title == value) return;
-                if (string.IsNullOrWhiteSpace(value))
-                    title = null;
-                else
-                    title = value;
+                if (string.IsNullOrWhiteSpace(value)) title = null; else title = value;
                 OnPropertyChanged("Title");
             }
         }
@@ -52,43 +48,51 @@ namespace CIS681.Fall2012.VDS.Data {
 
         #region Serialization
         /// <summary>
-        /// Before serializing
+        /// Before deserializing
         /// </summary>
         /// <param name="context"></param>
         [OnDeserializing]
-        private void OnDataDeserializing(StreamingContext context) {
-            InitBaseData();
-            InitData();
-        }
+        private void OnDataDeserializing(StreamingContext context) { BeforeInitializingData(); }
+
         /// <summary>
         /// After deserialized
         /// </summary>
         /// <param name="context"></param>
         [OnDeserialized]
-        private void OnDataDeserialized(StreamingContext context) {
-            RefreshBaseData();
-            RefreshData();
-        }
+        private void OnDataDeserialized(StreamingContext context) { AfterInitializingData(); }
+
+        /// <summary>
+        /// Before data serializing
+        /// </summary>
+        /// <param name="context"></param>
+        [OnSerializing]
+        private void OnDataSerializing(StreamingContext context) { BeforeFinalizingData(); }
+
+        /// <summary>
+        /// After data is serialized
+        /// </summary>
+        /// <param name="context"></param>
+        [OnSerialized]
+        private void OnDataSerialized(StreamingContext context) { AfterFinalizingData(); }
         #endregion
 
         #region Constructors
         public BaseData() {
             ID = Guid.NewGuid();
-            InitBaseData();
-            InitData();
-            RefreshBaseData();
-            RefreshData();
+            BeforeInitializingData();
+            AfterInitializingData();
         }
+
         /// <summary>
-        /// Should be implemented by server/client, used to load additional data
+        /// Should be overrided by inherited children, used to initialize basic data
         /// </summary>
-        protected virtual void InitData() { }
-        protected virtual void RefreshData() { }
+        protected virtual void BeforeInitializingData() { }
+        protected virtual void AfterInitializingData() { }
         /// <summary>
-        /// Should be implemented by inherited children, used to initialize basic data
+        /// After data is prepared and before it is serialized
         /// </summary>
-        protected virtual void InitBaseData() { }
-        protected virtual void RefreshBaseData() { }
+        protected virtual void BeforeFinalizingData() { }
+        protected virtual void AfterFinalizingData() { }
         #endregion
 
         /// <summary>
@@ -103,9 +107,8 @@ namespace CIS681.Fall2012.VDS.Data {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = null;
         protected void OnPropertyChanged(string name) {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
-            // change last modify time
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name));
+            // last modify time
             LastModifyTime = DateTime.Now;
         }
         #endregion

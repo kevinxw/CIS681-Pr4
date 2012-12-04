@@ -8,24 +8,35 @@
 /// Nothing to be TESTED here!
 //////
 
-//#define DEBUG_ON
-
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Windows;
 
-namespace CIS681.Fall2012.VDS.Data.Objects {
+namespace CIS681.Fall2012.VDS.Data {
     [DataContract(Name = "Connector", IsReference = true)]
-    public partial class Connector {
+    public class ConnectorData {
 
         #region Properties
         /// <summary>
-        /// Decide connector's position
+        /// Type of current Connector
+        /// </summary>
+        [DataMember(Name = "Type")]
+        public ConnectorType Type { get; protected set; }
+
+        /// <summary>
+        /// Connections connected to current connector
+        /// </summary>
+        [DataMember(Name = "Connections")]
+        public List<ConnectionData> Connections { get; private set; }
+
+        /// <summary>
+        /// Decide connector's position, but no need to store it
         /// </summary>
         public Point Position {
             get {
                 Point position = Owner.Position;
-                double width = Owner.Control.Size.Width, height = Owner.Control.Size.Height;
+                if (Owner.Size.IsEmpty) return position;
+                double width = Owner.Size.Width, height = Owner.Size.Height;
                 switch (Type) {
                     case ConnectorType.Center: position.Offset(width / 2, height / 2); break;
                     case ConnectorType.Bottom: position.Offset(width / 2, height); break;
@@ -33,49 +44,48 @@ namespace CIS681.Fall2012.VDS.Data.Objects {
                     case ConnectorType.Right: position.Offset(width, height / 2); break;
                     case ConnectorType.Top: position.Offset(width / 2, 0); break;
                 }
-#if DEBUG_ON
-                // test value
-                System.Console.WriteLine("{0} width {1} height {2} position {3}", System.DateTime.Now.Millisecond, width, height, position.ToString());
-#endif
                 return position;
             }
         }
 
         /// <summary>
-        /// Type of current Connector
-        /// </summary>
-        [DataMember(Name = "Type")]
-        public ConnectorType Type { get; private set; }
-
-        /// <summary>
-        /// Connections connected to current connector
-        /// </summary>
-        [DataMember(Name = "Connections")]
-        private List<Connection> connections = new List<Connection>();
-        public List<Connection> Connections { get { return connections; } }
-        #endregion
-
-        /// <summary>
         /// Who possess this connector
         /// </summary>
         [DataMember(Name = "Owner")]
-        public Model Owner { get; private set; }
+        public ModelData Owner { get; set; }
+        #endregion
 
         #region Consturctor
-        public Connector() { Type = ConnectorType.Center; }
-        public Connector(Model parent, ConnectorType type) {
+        public ConnectorData() {
+            Type = ConnectorType.Center;
+            AfterInitializingData();
+        }
+        public ConnectorData(ModelData parent, ConnectorType type) {
             Owner = parent;
             Type = type;
+            AfterInitializingData();
         }
         #endregion
+
+        private void AfterInitializingData() {
+            if (Connections == null)
+                Connections = new List<ConnectionData>();
+        }
+
+        /// <summary>
+        /// Connector Data is not a BaseData, so have to write it again
+        /// </summary>
+        /// <param name="context"></param>
+        [OnDeserialized]
+        private void OnDataDeserialized(StreamingContext context) { AfterInitializingData(); }
 
         /// <summary>
         /// Check whether two objects are the same by comparing its parent and type
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public bool Equals(Connector obj) {
-            return Owner == obj.Owner && Type == obj.Type;
+        public bool Equals(ConnectorData obj) {
+            return Owner != null && Owner.Equals(obj.Owner) && Type == obj.Type;
         }
     }
 }

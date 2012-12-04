@@ -2,8 +2,6 @@
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                      xmlns:data="clr-namespace:CIS681.Fall2012.VDS.Data"
-                      xmlns:obj="clr-namespace:CIS681.Fall2012.VDS.Data.Objects"
                       xmlns:w="clr-namespace:CIS681.Fall2012.VDS.UI"
                       xmlns:System="clr-namespace:System;assembly=mscorlib"
                       Title="Virtual Display System"
