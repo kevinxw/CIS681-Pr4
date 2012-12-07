@@ -6,15 +6,9 @@
 
 using System.ComponentModel;
 using System.Windows.Controls;
-using System.Collections.Generic;
 
-namespace CIS681.Fall2012.VDS.Data.Client {
+namespace CIS681.Fall2012.VDS.Data {
     public partial class Project {
-        /// <summary>
-        /// The current project opened
-        /// </summary>
-        public static Project CurrentProject { get; set; }
-
         /// <summary>
         /// Tab Control
         /// </summary>
@@ -24,19 +18,18 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         /// "real" diagram collection
         /// </summary>
         private DiagramCollection diagrams = null;
-
-        private List<Diagram> children;
+        public DiagramCollection Children { get { return diagrams; } }
 
         partial void InitTab() {
         }
         partial void RefreshTab() {
             Tabs = new TabControl();
-            diagrams = new DiagramCollection(children, Tabs);
+            diagrams = new DiagramCollection(children, this);
             diagrams.ActivateNewDiagram = true;
             // rebuild tabs by children
             diagrams.Sync();
-            if (ActivatedDiagram != null)
-                Tabs.SelectedItem = ActivatedDiagram.Tab;
+            if (activatedDiagram != null)
+                Tabs.SelectedItem = activatedDiagram.Tab;
             PropertyChanged += OnTitleChanged;
             PropertyChanged += OnActivatedDiagramChanged;
 #if DEBUG_ON
@@ -53,7 +46,7 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         private static void OnTitleChanged(object sender, PropertyChangedEventArgs e) {
             if (e.PropertyName != "Title") return;
             Project proj = sender as Project;
-            if (proj != Project.CurrentProject) return;
+            if (proj != Project.Current) return;
             TextBlock titleBlock = App.Current.MainWindow.FindName("ProjectNameBlock") as TextBlock;
             if (titleBlock == null) return;
             titleBlock.Text = proj.Title;
@@ -70,7 +63,7 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         private static void OnActivatedDiagramChanged(object sender, PropertyChangedEventArgs e) {
             if (e.PropertyName != "ActivatedDiagram") return;
             Project proj = sender as Project;
-            if (proj != Project.CurrentProject) return;
+            if (proj != Project.Current) return;
             if (proj.ActivatedDiagram != null)
                 proj.Tabs.SelectedItem = proj.ActivatedDiagram.Tab;
 #if DEBUG_ON

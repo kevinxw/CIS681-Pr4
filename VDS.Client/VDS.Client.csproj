@@ -8,7 +8,7 @@
     <ProjectGuid>{8377243E-1B04-4AA4-85E3-C70FB7820F35}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CIS681.Fall2012.VDS.Client</RootNamespace>
+    <RootNamespace>CIS681.Fall2012.VDS</RootNamespace>
     <AssemblyName>VDS.Client</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -58,8 +58,10 @@
       <HintPath>..\packages\MahApps.Metro.0.10.0.0\lib\net40\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Interactivity">
       <HintPath>..\packages\MahApps.Metro.0.10.0.0\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -80,11 +82,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\Client\Objects\Connection.cs" />
-    <Compile Include="Data\Client\Objects\Connector.cs" />
-    <Compile Include="Data\Client\Diagram.cs" />
-    <Compile Include="Data\Client\Objects\Model.cs" />
-    <Compile Include="Data\Persistence\FileManager.cs" />
+    <Compile Include="Communication\ISyncServiceClient.cs" />
+    <Compile Include="Communication\SyncServiceClient.cs" />
+    <Compile Include="Data\Client\Connection.Loader.cs" />
+    <Compile Include="Data\Client\Diagram.Loader.cs" />
+    <Compile Include="Data\Client\Model.Loader.cs" />
+    <Compile Include="Data\Diagram.cs" />
+    <Compile Include="Data\Objects\Connection.cs" />
+    <Compile Include="Data\Objects\Connector.cs" />
+    <Compile Include="Data\Objects\Model.cs" />
+    <Compile Include="Data\Project.cs" />
     <Compile Include="UI\Adorner\ConnectorAdorner.cs" />
     <Compile Include="UI\Adorner\AdornerDataThumb.cs" />
     <Compile Include="UI\Adorner\ModelOperationAdorner.cs" />
@@ -109,7 +116,7 @@
     <Compile Include="UI\IDrawable.cs" />
     <Compile Include="UI\ISelectable.cs" />
     <Compile Include="UI\Objects\ModelItem.cs" />
-    <Compile Include="Data\Client\Project.cs" />
+    <Compile Include="Data\Client\Project.Loader.cs" />
     <Compile Include="UI\Promot\QueationDialog.xaml.cs">
       <DependentUpon>QueationDialog.xaml</DependentUpon>
     </Compile>
@@ -126,6 +133,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data\Persistence\FileManager.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -303,6 +311,9 @@
       <Project>{F17BD155-4B14-4FA2-AFC0-B3AB16D52A56}</Project>
       <Name>VDS.SharedComponents</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

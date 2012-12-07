@@ -9,8 +9,8 @@
 
 using System;
 using System.Runtime.Serialization;
-namespace CIS681.Fall2012.VDS.Data {
-    [DataContract(Name = "ConnectorType")]
+namespace CIS681.Fall2012.VDS.Data.Objects {
+    [DataContract(Name = "ConnectorType", Namespace = "http://VDS.Data")]
     public enum ConnectorType {
         // notice the value are carefully assigned, we can get opposite position by (type-2), then negative the value
         [EnumMember]

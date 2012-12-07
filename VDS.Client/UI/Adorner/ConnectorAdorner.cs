@@ -8,9 +8,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using CIS681.Fall2012.VDS.Data.Client;
-using CIS681.Fall2012.VDS.UI.Objects;
 using CIS681.Fall2012.VDS.Data;
+using CIS681.Fall2012.VDS.Data.Objects;
+using CIS681.Fall2012.VDS.UI.Objects;
 
 namespace CIS681.Fall2012.VDS.UI.Adorner {
     public class ConnectorAdorner : System.Windows.Documents.Adorner {
@@ -100,7 +100,7 @@ namespace CIS681.Fall2012.VDS.UI.Adorner {
                 ConnectionType connType = (ConnectionType)(w.FindName("CurrentConnectionType") as ComboBox).SelectedIndex;
                 drawingConn.ContentObject.Type = connType.ToString();
                 drawingConn.ContentObject.Source = thumb.Data;  // bind source here
-                Diagram diagram = Project.CurrentProject.Children.FindByCanvas(canvas);
+                Diagram diagram = Project.Current.Children.FindByCanvas(canvas);
                 diagram.Children.Add(drawingConn.ContentObject);
             }
             if ((drawingConn.ContentObject.Sink = target) != null)
@@ -129,7 +129,7 @@ namespace CIS681.Fall2012.VDS.UI.Adorner {
             if (drawingConn != null) {
                 // if target is empty, cancel the connection
                 if (drawingConn.ContentObject.Sink == null) {
-                    Diagram diagram = Project.CurrentProject.Children.FindByCanvas(canvas);
+                    Diagram diagram = Project.Current.Children.FindByCanvas(canvas);
                     diagram.Children.Remove(drawingConn.ContentObject);
                 }
                 drawingConn = null;

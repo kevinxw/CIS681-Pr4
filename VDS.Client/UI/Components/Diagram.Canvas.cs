@@ -12,7 +12,7 @@ using CIS681.Fall2012.VDS.UI;
 using CIS681.Fall2012.VDS.UI.Objects;
 using CIS681.Fall2012.VDS.UI.Operation;
 
-namespace CIS681.Fall2012.VDS.Data.Client {
+namespace CIS681.Fall2012.VDS.Data {
     public partial class Diagram : IControl<Canvas> {
         /// <summary>
         /// Selected Items on current ContainerCanvas
@@ -32,7 +32,7 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         partial void RefreshCanvas() {
             Control = new Canvas();
             // must initialize it here!! deserialization will create an new collection anyway!
-            Children = new UMLObjectCollection(Models, Connections, Control);
+            Children = new UMLObjectCollection(this);
             Children.Sync();
             Control.Focusable = false;  // cannot be focused by default
             Control.MouseMove += OnMouseMove_ShowPos;
@@ -45,12 +45,17 @@ namespace CIS681.Fall2012.VDS.Data.Client {
                 Control.Height = Size.Height;
             }
             // fix canvas start position
-            if (double.IsNaN(StartPosition.X)) StartPosition.X = 0;
-            if (double.IsNaN(StartPosition.Y)) StartPosition.Y = 0;
+            if (double.IsNaN(StartPosition.X)) startPosition.X = 0;
+            if (double.IsNaN(StartPosition.Y)) startPosition.Y = 0;
 #if DEBUG_ON
             // test value
             System.Console.WriteLine("{0} Canvas refreshed!! ", System.DateTime.Now.Millisecond);
 #endif
+        }
+
+        partial void FinalizingCanvasData() {
+            if (Size.IsEmpty)
+                size = new Size(Control.ActualWidth, Control.ActualHeight);
         }
 
         #region Event Handlers
@@ -61,7 +66,7 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         /// <param name="e"></param>
         private static void OnCanvasLoaded(object sender, RoutedEventArgs e) {
             Canvas canvas = sender as Canvas;
-            Diagram diagram = Project.CurrentProject.Children.FindByCanvas(canvas);
+            Diagram diagram = Project.Current.Children.FindByCanvas(canvas);
             // draw models and connections
             diagram.Models.ForEach(item => item.Control.Draw());
             diagram.Connections.ForEach(item => item.Control.Draw());
@@ -118,7 +123,7 @@ namespace CIS681.Fall2012.VDS.Data.Client {
             Canvas c = sender as Canvas;
             DragDataWrapper data = e.Data.GetData(typeof(DragDataWrapper)) as DragDataWrapper;
             ModelItem m = data.Content as ModelItem;
-            Diagram d = Project.CurrentProject.Children.FindByCanvas(c);
+            Diagram d = Project.Current.Children.FindByCanvas(c);
             if (d == null || m == null) return;
             switch (data.Type) {
                 case DragOperationType.Create:
@@ -137,7 +142,7 @@ namespace CIS681.Fall2012.VDS.Data.Client {
             ModelItem m = data.Content as ModelItem;
             // get canvas
             Canvas c = sender as Canvas;
-            Diagram d = Project.CurrentProject.Children.FindByCanvas(c);
+            Diagram d = Project.Current.Children.FindByCanvas(c);
             if (m == null || d == null) return;
             switch (data.Type) {
                 case DragOperationType.Create:
@@ -156,7 +161,7 @@ namespace CIS681.Fall2012.VDS.Data.Client {
             DragDataWrapper data = e.Data.GetData(typeof(DragDataWrapper)) as DragDataWrapper;
             ModelItem m = data.Content as ModelItem;
             Canvas c = sender as Canvas;
-            Diagram d = Project.CurrentProject.Children.FindByCanvas(c);
+            Diagram d = Project.Current.Children.FindByCanvas(c);
             if (m == null || d == null) return;
             switch (data.Type) {
                 case DragOperationType.Create:
@@ -173,7 +178,7 @@ namespace CIS681.Fall2012.VDS.Data.Client {
             DragDataWrapper data = e.Data.GetData(typeof(DragDataWrapper)) as DragDataWrapper;
             ModelItem m = data.Content as ModelItem;
             Canvas c = sender as Canvas;
-            Diagram d = Project.CurrentProject.Children.FindByCanvas(c);
+            Diagram d = Project.Current.Children.FindByCanvas(c);
             // get relative position
             Point p = e.GetPosition(c);
             UpdateMousePos(c, p);

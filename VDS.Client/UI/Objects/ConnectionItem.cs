@@ -9,7 +9,8 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using CIS681.Fall2012.VDS.Data.Client;
+using CIS681.Fall2012.VDS.Data;
+using CIS681.Fall2012.VDS.Data.Objects;
 using CIS681.Fall2012.VDS.UI;
 using CIS681.Fall2012.VDS.UI.Objects;
 using CIS681.Fall2012.VDS.UI.PathFinder;
@@ -174,7 +175,7 @@ namespace CIS681.Fall2012.VDS.UI.Objects {
         public void UpdatePath() {
             IPathFinder pathFinder = new OrthogonalPathFinder {
                 Connection = contentObject,
-                CurrentDiagram = Project.CurrentProject.Children.FindByCanvas(ContainerCanvas)
+                CurrentDiagram = Project.Current.Children.FindByCanvas(ContainerCanvas)
             };
             contentObject.Stops.Clear();
             contentObject.Stops.AddRange(pathFinder.GetPath());
@@ -186,7 +187,7 @@ namespace CIS681.Fall2012.VDS.UI.Objects {
         public void UpdatePath(Point sink) {
             IPathFinder pathFinder = new OrthogonalPathFinder {
                 Connection = contentObject,
-                CurrentDiagram = Project.CurrentProject.Children.FindByCanvas(ContainerCanvas)
+                CurrentDiagram = Project.Current.Children.FindByCanvas(ContainerCanvas)
             };
             contentObject.Stops.Clear();
             contentObject.Stops.AddRange(pathFinder.GetPath(sink));
@@ -198,7 +199,7 @@ namespace CIS681.Fall2012.VDS.UI.Objects {
         /// <param name="sink"></param>
         public void UpdatePath(Point source, Point sink) {
             IPathFinder pathFinder = new OrthogonalPathFinder {
-                CurrentDiagram = Project.CurrentProject.Children.FindByCanvas(ContainerCanvas)
+                CurrentDiagram = Project.Current.Children.FindByCanvas(ContainerCanvas)
             };
             contentObject.Stops.Clear();
             contentObject.Stops.AddRange(pathFinder.GetPath(source, sink));
@@ -224,7 +225,7 @@ namespace CIS681.Fall2012.VDS.UI.Objects {
 /*
  * Extends connection
  */
-namespace CIS681.Fall2012.VDS.Data.Client {
+namespace CIS681.Fall2012.VDS.Data.Objects {
     public partial class Connection : IControl<ConnectionItem> {
         public ConnectionItem Control { get; set; }
         partial void RefreshControl() {

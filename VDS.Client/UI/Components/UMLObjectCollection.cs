@@ -11,28 +11,37 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Controls;
+using CIS681.Fall2012.VDS.Data.Objects;
 
-namespace CIS681.Fall2012.VDS.Data.Client {
+namespace CIS681.Fall2012.VDS.Data {
     public class UMLObjectCollection : ICollection {
         private List<Model> models;
         private List<Connection> connections;
-        private Canvas canvas;
+        private Diagram diagram;
 
-        public UMLObjectCollection(List<Model> m, List<Connection> c, Canvas canv) {
-            if (m == null || c == null || canv == null)
+        public UMLObjectCollection(Diagram diagram) {
+            if (diagram == null)
                 throw new ArgumentNullException();
-            models = m;
-            connections = c;
-            canvas = canv;
+            this.diagram = diagram;
+            models = diagram.Models;
+            connections = diagram.Connections;
         }
 
         /// <summary>
         /// Re-draw items on canvas
         /// </summary>
         public void Sync() {
-            canvas.Children.Clear();
-            models.ForEach(item => { canvas.Children.Add(item.Control); item.Control.ContainerCanvas = canvas; });
-            connections.ForEach(item => { canvas.Children.Add(item.Control); item.Control.ContainerCanvas = canvas; });
+            diagram.Control.Children.Clear();
+            models.ForEach(item => {
+                diagram.Control.Children.Add(item.Control);
+                item.Control.ContainerCanvas = diagram.Control;
+                item.Owner = diagram;
+            });
+            connections.ForEach(item => {
+                diagram.Control.Children.Add(item.Control);
+                item.Control.ContainerCanvas = diagram.Control;
+                item.Owner = diagram;
+            });
         }
 
         #region Add
@@ -47,14 +56,16 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         }
         public void Add(Model model) {
             models.Add(model);
-            canvas.Children.Add(model.Control);
-            model.Control.ContainerCanvas = canvas;
+            diagram.Control.Children.Add(model.Control);
+            model.Control.ContainerCanvas = diagram.Control;
+            model.Owner = diagram;
             Canvas.SetZIndex(model.Control, Count);
         }
         public void Add(Connection conn) {
             connections.Add(conn);
-            canvas.Children.Add(conn.Control);
-            conn.Control.ContainerCanvas = canvas;
+            diagram.Control.Children.Add(conn.Control);
+            conn.Control.ContainerCanvas = diagram.Control;
+            conn.Owner = diagram;
             Canvas.SetZIndex(conn.Control, Count);
         }
         #endregion
@@ -72,17 +83,19 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         public void Remove(Connection conn) {
             conn.Sink = null;
             conn.Source = null;
+            conn.Owner = null;
             conn.Control.ContainerCanvas = null;
             connections.Remove(conn);
-            canvas.Children.Remove(conn.Control);
+            diagram.Control.Children.Remove(conn.Control);
         }
         public void Remove(Model model) {
             // clean relationships
             foreach (Connector connector in model.Connectors)
                 connector.Connections.ForEach(item => Remove(item));
+            model.Owner = null;
             model.Control.ContainerCanvas = null;
             models.Remove(model);
-            canvas.Children.Remove(model.Control);
+            diagram.Control.Children.Remove(model.Control);
         }
         #endregion
 
@@ -90,9 +103,11 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         /// Delete all objects, useful when delete a diagram
         /// </summary>
         public void Clear() {
+            models.ForEach(item => { item.Owner = null; item.Control.ContainerCanvas = null; });
+            connections.ForEach(item => { item.Owner = null; item.Control.ContainerCanvas = null; });
             models.Clear();
             connections.Clear();
-            canvas.Children.Clear();
+            diagram.Control.Children.Clear();
         }
         /// <summary>
         /// Contains one object??

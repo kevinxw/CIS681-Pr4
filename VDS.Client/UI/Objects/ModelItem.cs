@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using CIS681.Fall2012.VDS.Data.Client;
+using CIS681.Fall2012.VDS.Data.Objects;
 using CIS681.Fall2012.VDS.UI;
 using CIS681.Fall2012.VDS.UI.Adorner;
 using CIS681.Fall2012.VDS.UI.Objects;
@@ -195,6 +195,18 @@ namespace CIS681.Fall2012.VDS.UI.Objects {
         }
         private void Init() {
             ContentObject.Control = this;
+            Loaded += OnModelLoaded;
+        }
+
+        /// <summary>
+        /// Update size property on model load
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnModelLoaded(object sender, RoutedEventArgs e) {
+            ModelItem item = sender as ModelItem;
+            if (item.ContentObject.Size.IsEmpty)
+                item.ContentObject.Size = item.Size;
         }
         /// <summary>
         /// Initialize
@@ -209,13 +221,17 @@ namespace CIS681.Fall2012.VDS.UI.Objects {
 /*
  * An extension to model
  */
-namespace CIS681.Fall2012.VDS.Data.Client {
+namespace CIS681.Fall2012.VDS.Data.Objects {
     public partial class Model : IControl<ModelItem> {
         public ModelItem Control { get; set; }
 
         partial void RefreshControl() {
             // create corresponding model item
             new ModelItem(this);
+        }
+        partial void FinalizeControl() {
+            if (Size.IsEmpty)   // do not use size property here to prevent event triggering
+                size = Control.Size;
         }
     }
 }

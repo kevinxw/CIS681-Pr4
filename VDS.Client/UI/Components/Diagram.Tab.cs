@@ -11,7 +11,7 @@ using System.Windows.Input;
 using CIS681.Fall2012.VDS.UI;
 using CIS681.Fall2012.VDS.UI.Promot;
 
-namespace CIS681.Fall2012.VDS.Data.Client {
+namespace CIS681.Fall2012.VDS.Data {
     public partial class Diagram {
         /// <summary>
         /// The TabItem of current Diagram
@@ -31,14 +31,14 @@ namespace CIS681.Fall2012.VDS.Data.Client {
                 System.Console.WriteLine("{0} Tab loaded", System.DateTime.Now.Millisecond);
 #endif
             };
-        }
+        } 
 
         partial void RefreshTab() {
             ScrollViewer scroll = new ScrollViewer();
             scroll.Content = Control;
             Tab.Content = scroll;
             // init title
-            Tab.Header = string.IsNullOrWhiteSpace(Title) ? "(Untitled)" : Title;
+            Tab.Header = Title;
             // bind events
             PropertyChanged += OnDiagramTitleChanged;
             PropertyChanged += OnIsOpenChanged;
@@ -70,14 +70,14 @@ namespace CIS681.Fall2012.VDS.Data.Client {
             if (d.IsOpen) {
                 d.Tab.Visibility = Visibility.Visible;
                 // activate current tab
-                Project.CurrentProject.ActivatedDiagram = d;
+                Project.Current.ActivatedDiagram = d;
             }
             else {
                 // hide the diagram
                 d.Tab.Visibility = Visibility.Collapsed;
                 ScrollViewer s = d.Tab.Content as ScrollViewer;
                 s.Visibility = Visibility.Collapsed;
-                Project.CurrentProject.ActivatedDiagram = null;
+                Project.Current.ActivatedDiagram = null;
             }
 #if DEBUG_ON
             System.Console.WriteLine("{0} diagram open : {1}", System.DateTime.Now.Millisecond, d.IsOpen);

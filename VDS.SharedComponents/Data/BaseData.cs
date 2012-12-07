@@ -22,7 +22,7 @@ namespace CIS681.Fall2012.VDS.Data {
         public Guid ID { get; private set; }
 
         /// <summary>
-        /// Time of last modification
+        /// time of last modification
         /// </summary>
         [DataMember(Name = "LastModifyTime", EmitDefaultValue = false)]
         private DateTime lastModifyTime = DateTime.Now.ToUniversalTime();
@@ -37,62 +37,68 @@ namespace CIS681.Fall2012.VDS.Data {
         [DataMember(Name = "Title", EmitDefaultValue = false)]
         private string title = null;
         public string Title {
-            get { return title; }
+            get { return string.IsNullOrWhiteSpace(title) ? "(Untitled)" : title; }
             set {
                 if (title == value) return;
-                if (string.IsNullOrWhiteSpace(value)) title = null; else title = value;
+                if (string.IsNullOrWhiteSpace(value))
+                    title = null;
+                else
+                    title = value;
                 OnPropertyChanged("Title");
             }
         }
+
+        /// <summary>
+        /// If the object is initialized
+        /// </summary>
+        public bool IsInitialized { get; private set; }
         #endregion
 
         #region Serialization
         /// <summary>
-        /// Before deserializing
+        /// Before serializing
         /// </summary>
         /// <param name="context"></param>
         [OnDeserializing]
-        private void OnDataDeserializing(StreamingContext context) { BeforeInitializingData(); }
-
+        private void OnDataDeserializing(StreamingContext context) {
+            InitializingData();
+        }
         /// <summary>
         /// After deserialized
         /// </summary>
         /// <param name="context"></param>
         [OnDeserialized]
-        private void OnDataDeserialized(StreamingContext context) { AfterInitializingData(); }
+        private void OnDataDeserialized(StreamingContext context) {
+            InitializedData();
+        }
 
-        /// <summary>
-        /// Before data serializing
-        /// </summary>
-        /// <param name="context"></param>
         [OnSerializing]
-        private void OnDataSerializing(StreamingContext context) { BeforeFinalizingData(); }
-
-        /// <summary>
-        /// After data is serialized
-        /// </summary>
-        /// <param name="context"></param>
+        private void OnDataSerializing(StreamingContext context) {
+            FinalizingData();
+        }
         [OnSerialized]
-        private void OnDataSerialized(StreamingContext context) { AfterFinalizingData(); }
+        private void OnDataSerialized(StreamingContext context) {
+            FinalizedData();
+        }
         #endregion
 
         #region Constructors
         public BaseData() {
             ID = Guid.NewGuid();
-            BeforeInitializingData();
-            AfterInitializingData();
+            InitializingData();
+            InitializedData();
         }
-
         /// <summary>
-        /// Should be overrided by inherited children, used to initialize basic data
+        /// Should be implemented by server/client, used to load additional data
         /// </summary>
-        protected virtual void BeforeInitializingData() { }
-        protected virtual void AfterInitializingData() { }
-        /// <summary>
-        /// After data is prepared and before it is serialized
-        /// </summary>
-        protected virtual void BeforeFinalizingData() { }
-        protected virtual void AfterFinalizingData() { }
+        protected virtual void InitializingData() { InitializingBaseData(); }
+        protected virtual void InitializedData() { InitializedBaseData(); IsInitialized = true; }
+        protected virtual void FinalizingData() { FinalizingBaseData(); }
+        protected virtual void FinalizedData() { FinalizedBaseData(); }
+        protected virtual void InitializingBaseData() { }
+        protected virtual void InitializedBaseData() { }
+        protected virtual void FinalizingBaseData() { }
+        protected virtual void FinalizedBaseData() { }
         #endregion
 
         /// <summary>
@@ -107,9 +113,22 @@ namespace CIS681.Fall2012.VDS.Data {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = null;
         protected void OnPropertyChanged(string name) {
-            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name));
-            // last modify time
-            LastModifyTime = DateTime.Now;
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
+            // change last modify time
+            lastModifyTime = DateTime.UtcNow;
+            OnDataUpdated();
+        }
+        #endregion
+
+        #region Data Updated Notifier
+        public delegate void DataUpdatedEventHandler(BaseData data);
+        public event DataUpdatedEventHandler DataUpdated = null;
+        /// <summary>
+        /// When data is updated, trigger this event
+        /// </summary>
+        public void OnDataUpdated() {
+            if (IsInitialized && DataUpdated != null) DataUpdated(this);
         }
         #endregion
     }

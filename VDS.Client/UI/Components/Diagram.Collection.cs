@@ -11,15 +11,16 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace CIS681.Fall2012.VDS.Data.Client {
+namespace CIS681.Fall2012.VDS.Data {
     public class DiagramCollection : IList<Diagram> {
         private List<Diagram> list;
-        private TabControl tabs;
-        public DiagramCollection(List<Diagram> d, TabControl t) {
-            if (d == null || t == null)
+        private Project project;
+
+        public DiagramCollection(List<Diagram> diagrams, Project project) {
+            if (diagrams == null || project  == null)
                 throw new ArgumentNullException();
-            list = d;
-            tabs = t;
+            list = diagrams;
+            this.project = project;
         }
         /// <summary>
         /// By default, activate the new created diagram
@@ -55,8 +56,9 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         public void Insert(int index, Diagram item) {
             if (ActivateNewDiagram)
                 item.IsOpen = true;
+            item.Owner = project;
             list.Insert(index, item);
-            tabs.Items.Insert(index, item.Tab);
+            project.Tabs.Items.Insert(index, item.Tab);
         }
 
         /// <summary>
@@ -66,7 +68,8 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         public void RemoveAt(int index) {
             if (index < Count) {
                 this[index].IsOpen = false;
-                tabs.Items.RemoveAt(index);
+                this[index].Owner = null;
+                project.Tabs.Items.RemoveAt(index);
                 list.RemoveAt(index);
             }
         }
@@ -74,7 +77,7 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         public Diagram this[int index] {
             get { return list[index]; }
             set {
-                TabItem tab = tabs.Items[index] as TabItem;
+                TabItem tab = project.Tabs.Items[index] as TabItem;
                 ScrollViewer scroll = tab.Content as ScrollViewer;
                 scroll.Content = list[index] = value;
             }
@@ -86,15 +89,17 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         /// <param name="item"></param>
         public void Add(Diagram item) {
             list.Add(item);
-            tabs.Items.Add(item.Tab);
+            project.Tabs.Items.Add(item.Tab);
             // if there is only one tab, activate it
             if (ActivateNewDiagram)
                 item.IsOpen = true;
+            item.Owner = project;
         }
 
         public void Clear() {
+            list.ForEach(item => { item.IsOpen = false; item.Owner = null; });
             list.Clear();
-            tabs.Items.Clear();
+            project.Tabs.Items.Clear();
         }
 
         /// <summary>
@@ -125,8 +130,9 @@ namespace CIS681.Fall2012.VDS.Data.Client {
         /// synchronize data and tabs
         /// </summary>
         public void Sync() {
-            tabs.Items.Clear();
-            list.FindAll(item => item.IsOpen).ForEach(item => tabs.Items.Add(item.Tab));
+            project.Tabs.Items.Clear();
+            list.ForEach(item => item.Owner = project);
+            list.FindAll(item => item.IsOpen).ForEach(item => project.Tabs.Items.Add(item.Tab));
         }
 
         /// <summary>

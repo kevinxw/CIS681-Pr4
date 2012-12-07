@@ -8,8 +8,8 @@
 //////
 
 using System.Runtime.Serialization;
-namespace CIS681.Fall2012.VDS.Data {
-    [DataContract(Name = "ConnectorType")]
+namespace CIS681.Fall2012.VDS.Data.Objects {
+    [DataContract(Name = "ConnectorType", Namespace = "http://VDS.Data")]
     public enum ConnectionType {
         [EnumMember]
         Composition = 0,

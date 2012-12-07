@@ -2,7 +2,7 @@
  * A helper class used for debugging, display the data processed by the system
  */
 
-//#define DEBUG_ON
+#define DEBUG_ON
 
 using System;
 using System.Diagnostics;
